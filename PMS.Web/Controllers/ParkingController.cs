@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PMS.Application.Services.Dashbaord.Queries;
 using PMS.Application.Services.Parking.Commands;
 using PMS.Application.Services.Parking.Queries;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -34,6 +36,18 @@ namespace PMS.Web.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        [HttpGet()]
+        public async Task<IActionResult> GetParkingInfoById(int id)
+        {
+            var query = new GetParkingRecordByIdQuery { Id = id };
+            var result = await Mediator.Send(query);
+            if (result == null)
+            {
+                return NotFound(new { message = "Parking record not found" });
+            }
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] DateTime? date = null)
         {
@@ -42,10 +56,19 @@ namespace PMS.Web.Controllers
             return Ok(result);
         }
 
-        [HttpGet()]
-        public async Task<IActionResult> GetDashboardData()
+        [HttpGet]
+        public async Task<IActionResult> GetDashboardData([FromQuery] DateTime? date = null)
         {
-            var result = await Mediator.Send(new GetDashboardDataQuery());
+            var result = await Mediator.Send(new GetDashboardDataQuery { Date = date });
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLineChartData()
+        {
+            var query = new GetLineChartDataQuery();
+            var result = await Mediator.Send(query);
             return Ok(result);
         }
     }

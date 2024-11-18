@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PMS.Application.Common.Interfaces;
+using PMS.Application.Services.Parking.Models;
 
 namespace PMS.Application.Services.Parking.Queries
 {
@@ -48,15 +49,6 @@ namespace PMS.Application.Services.Parking.Queries
         }
     }
 
-    public class ParkingRecordDto
-    {
-        public int Id { get; set; }
-        public string OwnerName { get; set; }
-        public string VehicleType { get; set; }
-        public string LicenseNumber { get; set; }
-        public DateTime EntryTime { get; set; }
-        public DateTime? ExitTime { get; set; }
-        public string Status { get; set; }
-    }
+    
 
 }

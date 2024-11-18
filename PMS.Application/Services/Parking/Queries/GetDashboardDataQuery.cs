@@ -9,7 +9,10 @@ using PMS.Application.Common.Interfaces;
 
 namespace PMS.Application.Services.Parking.Queries
 {
-    public class GetDashboardDataQuery : IRequest<DashboardDataDto> { }
+    public class GetDashboardDataQuery : IRequest<DashboardDataDto> 
+    {
+        public DateTime? Date { get; set; }
+    }
 
     public class GetDashboardDataQueryHandler : IRequestHandler<GetDashboardDataQuery, DashboardDataDto>
     {
@@ -22,12 +25,12 @@ namespace PMS.Application.Services.Parking.Queries
 
         public async Task<DashboardDataDto> Handle(GetDashboardDataQuery request, CancellationToken cancellationToken)
         {
-            var today = DateTime.Today;
+            var date = request.Date.Value.Date;
 
-            var totalCarsParked = await _context.ParkingRecords.CountAsync(record => record.EntryTime.Date == today, cancellationToken);
+            var totalCarsParked = await _context.ParkingRecords.CountAsync(record => record.EntryTime.Date == date, cancellationToken);
             var emptySlots = 100 - totalCarsParked; // Assuming a fixed total of 100 slots
             var vehicleTypeInfo = await _context.ParkingRecords
-                .Where(record => record.EntryTime.Date == today)
+                .Where(record => record.EntryTime.Date == date)
                 .GroupBy(record => record.VehicleType)
                 .Select(group => new { VehicleType = group.Key, Count = group.Count() })
                 .ToListAsync(cancellationToken);

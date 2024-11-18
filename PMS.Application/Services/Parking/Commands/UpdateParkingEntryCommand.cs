@@ -11,9 +11,15 @@ using PMS.Application.Common.Models;
 public class UpdateParkingEntryCommand : IRequest<IResult>
 {
     public int Id { get; set; }
-    public DateTime ExitTime { get; set; }
-    public string Status { get; set; } // "Out"
+    public string LicenseNumber { get; set; }
+    public string VehicleType { get; set; }
+    public string OwnerName { get; set; }
+    public string OwnerPhone { get; set; }
+    public string OwnerAddress { get; set; }
+    public DateTime EntryTime { get; set; }
+    public DateTime? ExitTime { get; set; }
     public decimal ParkingCharge { get; set; }
+    public string Status { get; set; }
 }
 
 public class UpdateParkingEntryCommandHandler : IRequestHandler<UpdateParkingEntryCommand, IResult>
@@ -32,9 +38,17 @@ public class UpdateParkingEntryCommandHandler : IRequestHandler<UpdateParkingEnt
         if (record == null)
             return Result.CreateFailure("Parking record not found");
 
+        record.LicenseNumber = request.LicenseNumber;
+        record.VehicleType = request.VehicleType;
+        record.OwnerName = request.OwnerName;
+        record.OwnerPhone = request.OwnerPhone;
+        record.OwnerAddress = request.OwnerAddress;
+        record.EntryTime = request.EntryTime;
         record.ExitTime = request.ExitTime;
         record.Status = request.Status;
         record.ParkingCharge = request.ParkingCharge;
+
+
 
         _context.ParkingRecords.Update(record);
         await _context.SaveChangesAsync(cancellationToken);
