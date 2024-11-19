@@ -44,7 +44,11 @@ public class UpdateParkingEntryCommandHandler : IRequestHandler<UpdateParkingEnt
         record.OwnerPhone = request.OwnerPhone;
         record.OwnerAddress = request.OwnerAddress;
         record.EntryTime = request.EntryTime;
-        record.ExitTime = request.ExitTime;
+
+        if (record.Status == "In" && request.Status=="Out")
+        {
+            record.ExitTime = DateTime.Now;
+        }
         record.Status = request.Status;
         record.ParkingCharge = request.ParkingCharge;
 
