@@ -51,10 +51,9 @@ var app = builder.Build();
 app.UseAuthorization();
 
 app.UseCors(x => x
-               .WithOrigins("https://parking-management-system-appbd.netlify.app")
                .AllowAnyMethod()
                .AllowAnyHeader()
+               .SetIsOriginAllowed(origin => true)
                .AllowCredentials());
 app.MapControllers();
 app.Run();
-//(origin => true)
